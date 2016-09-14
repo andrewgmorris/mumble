@@ -41,3 +41,4 @@ doxygen/
 .qmake.cache
 .qmake.stash
 .DS_Store
+src/mumble/mocinclude.opt

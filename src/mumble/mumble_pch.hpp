@@ -97,7 +97,8 @@
 
 #define STACKVAR(type, varname, count) type *varname=reinterpret_cast<type *>(_alloca(sizeof(type) * (count)))
 
-#else // ifndef Q_OS_WIN
+#endif
+#ifndef Q_OS_WIN // ifndef Q_OS_WIN
 #include <math.h>
 #define STACKVAR(type, varname, count) type varname[count]
 #define CopyMemory(dst,ptr,len) memcpy(dst,ptr,len)

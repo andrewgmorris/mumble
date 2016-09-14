@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file alias="Information_icon.svg">../../icons/publicdomain/Information_icon.svg</file>
         <file alias="self_undeafened.svg">../../icons/self_undeafened.svg</file>
+        <file alias="shout_priority_disabled.svg">../../icons/shout_priority_disabled.svg</file>
+        <file alias="shout_priority_active.svg">../../icons/shout_priority_active.svg</file>
         <file alias="mumble.svg">../../icons/mumble.svg</file>
         <file alias="mumble.icns">../../icons/mumble.icns</file>
         <file alias="mumble.osx.png">../../icons/mumble.osx.png</file>

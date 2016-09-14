@@ -179,6 +179,7 @@
    <addaction name="qaAudioMute"/>
    <addaction name="qaAudioDeaf"/>
    <addaction name="qaRecording"/>
+   <addaction name="qaShoutPriority"/>
    <addaction name="separator"/>
    <addaction name="qaSelfComment"/>
    <addaction name="separator"/>
@@ -485,6 +486,29 @@
    </property>
    <property name="whatsThis">
     <string>Deafen or undeafen yourself. When deafened, you will not hear anything. Deafening yourself will also mute.</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="qaShoutPriority">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>skin:shout_priority_active.svg</normaloff>
+     <normalon>skin:shout_priority_disabled.svg</normalon>
+     <activeon>skin:shout_priority_disabled.svg</activeon>skin:shout_priority_active.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Disable Shout Priority</string>
+   </property>
+   <property name="toolTip">
+    <string>Disable Shout Priority</string>
+   </property>
+   <property name="whatsThis">
+    <string>Disable Shout Priority</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>

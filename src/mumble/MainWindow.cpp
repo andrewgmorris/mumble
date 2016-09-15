@@ -269,7 +269,7 @@ void MainWindow::setupGui()  {
 
 	qaAudioMute->setChecked(g.s.bMute);
 	qaAudioDeaf->setChecked(g.s.bDeaf);
-    qaShoutPriority->setChecked(false);
+    qaShoutPriority->setChecked(!g.s.bShoutPriority);
 #ifdef USE_NO_TTS
 	qaAudioTTS->setChecked(false);
 	qaAudioTTS->setDisabled(true);
@@ -2301,6 +2301,16 @@ void MainWindow::on_qaAudioDeaf_triggered() {
 	}
 
 	updateTrayIcon();
+}
+
+void MainWindow::on_qaShoutPriority_triggered() {
+    if (g.s.bShoutPriority) {
+        g.s.bShoutPriority = false;
+  		g.l->log(Log::Information, tr("Shout priority disabled."));
+    } else {
+        g.s.bShoutPriority = true;
+  		g.l->log(Log::Information, tr("Shout priority enabled."));
+    }
 }
 
 void MainWindow::on_qaRecording_triggered() {

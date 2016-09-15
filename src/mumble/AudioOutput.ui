@@ -700,6 +700,82 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="qgbShoutPriority">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Shout Priority</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="0" column="3" colspan="3">
+       <widget class="QCheckBox" name="qcbShoutPriorityIgnorePriority">
+        <property name="toolTip">
+         <string>Reduce the volume of users with Priority Speaker like other users</string>
+        </property>
+        <property name="whatsThis">
+         <string>Checking this will cause users with Priority Speaker to be treated the same as other users channel when reducing volume.</string>
+        </property>
+        <property name="text">
+         <string>Reduce volume of Priority Speakers</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="qliShoutPriorityVolumeReduction">
+        <property name="text">
+         <string>Reduce volume by...</string>
+        </property>
+        <property name="buddy">
+         <cstring>qsShoutPriorityVolumeReduction</cstring>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QSlider" name="qsShoutPriorityVolumeReduction">
+        <property name="toolTip">
+         <string>Percent to reduce user volume by</string>
+        </property>
+        <property name="statusTip">
+         <string/>
+        </property>
+        <property name="whatsThis">
+         <string>This sets the percent to reduce user volume by.</string>
+        </property>
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="qlShoutPriorityVolumeReduction">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string notr="true">at</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer>
      <property name="orientation">
       <enum>Qt::Vertical</enum>

@@ -191,6 +191,10 @@ struct Settings {
 	bool bAttenuateLoopbacks;
 	int iOutputDelay;
 	bool bUseOpusMusicEncoding;
+    
+    bool bShoutPriority;
+    bool bShoutPriorityIgnorePriority;
+    float fShoutPriorityVolumeReduction;
 
 	QString qsALSAInput, qsALSAOutput;
 	QString qsPulseAudioInput, qsPulseAudioOutput;

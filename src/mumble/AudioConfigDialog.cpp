@@ -476,6 +476,9 @@ void AudioOutputDialog::load(const Settings &r) {
 	loadSlider(qsBloom, iroundf(r.fAudioBloom * 100.0f + 0.5f));
 	loadCheckBox(qcbHeadphones, r.bPositionalHeadphone);
 	loadCheckBox(qcbPositional, r.bPositionalAudio);
+    
+	loadCheckBox(qcbShoutPriorityIgnorePriority, r.bShoutPriorityIgnorePriority);
+	loadSlider(qsShoutPriorityVolumeReduction, iroundf((1.0f - r.fShoutPriorityVolumeReduction) * 100.0f + 0.5f));
 
 	qsOtherVolume->setEnabled(r.bAttenuateOthersOnTalk || r.bAttenuateOthers);
 	qlOtherVolume->setEnabled(r.bAttenuateOthersOnTalk || r.bAttenuateOthers);
@@ -504,6 +507,8 @@ void AudioOutputDialog::save() const {
 	s.bPositionalHeadphone = qcbHeadphones->isChecked();
 	s.bExclusiveOutput = qcbExclusive->isChecked();
 
+	s.fShoutPriorityVolumeReduction = 1.0f - (static_cast<float>(qsShoutPriorityVolumeReduction->value()) / 100.0f);
+	s.bShoutPriorityIgnorePriority = qcbShoutPriorityIgnorePriority->isChecked();
 
 	if (AudioOutputRegistrar::qmNew) {
 		AudioOutputRegistrar *aor = AudioOutputRegistrar::qmNew->value(qcbSystem->currentText());
@@ -637,4 +642,8 @@ void AudioOutputDialog::on_qcbAttenuateOthers_clicked(bool checked) {
 
 void AudioOutputDialog::on_qcbOnlyAttenuateSameOutput_clicked(bool checked) {
 	qcbAttenuateLoopbacks->setEnabled(checked);
+}
+
+void AudioOutputDialog::on_qsShoutPriorityVolumeReduction_valueChanged(int v) {
+	qlShoutPriorityVolumeReduction->setText(tr("%1 %").arg(v));
 }

@@ -98,19 +98,19 @@
 #define STACKVAR(type, varname, count) type *varname=reinterpret_cast<type *>(_alloca(sizeof(type) * (count)))
 
 #endif
-#ifndef Q_OS_WIN // ifndef Q_OS_WIN
-#include <math.h>
-#define STACKVAR(type, varname, count) type varname[count]
-#define CopyMemory(dst,ptr,len) memcpy(dst,ptr,len)
-#define ZeroMemory(ptr,len) memset(ptr, 0, len)
-#define __cdecl
-typedef WId HWND;
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#endif
+// #ifndef Q_OS_WIN // ifndef Q_OS_WIN
+// #include <math.h>
+// #define STACKVAR(type, varname, count) type varname[count]
+// #define CopyMemory(dst,ptr,len) memcpy(dst,ptr,len)
+// #define ZeroMemory(ptr,len) memset(ptr, 0, len)
+// #define __cdecl
+// typedef WId HWND;
+// #include <sys/socket.h>
+// #include <sys/types.h>
+// #include <arpa/inet.h>
+// #include <netinet/in.h>
+// #include <netinet/tcp.h>
+// #endif
 
 #if !defined(Q_OS_OPENBSD) && (defined(__MMX__) || defined(Q_OS_WIN))
 #include <mmintrin.h>

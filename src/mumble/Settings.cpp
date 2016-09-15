@@ -235,6 +235,9 @@ Settings::Settings() {
 	bAttenuateUsersOnPrioritySpeak = false;
 	bOnlyAttenuateSameOutput = false;
 	bAttenuateLoopbacks = false;
+    bShoutPriority = true;
+    bShoutPriorityIgnorePriority = false;
+    fShoutPriorityVolumeReduction = 0.125f;
 	iMinLoudness = 1000;
 	iVoiceHold = 50;
 	iJitterBufferSize = 1;
@@ -566,6 +569,9 @@ void Settings::load(QSettings* settings_ptr) {
 	SAVELOAD(bAttenuateUsersOnPrioritySpeak, "audio/attenuateusersonpriorityspeak");
 	SAVELOAD(bOnlyAttenuateSameOutput, "audio/onlyattenuatesameoutput");
 	SAVELOAD(bAttenuateLoopbacks, "audio/attenuateloopbacks");
+	SAVELOAD(bShoutPriority, "audio/shoutpriority");
+	SAVELOAD(bShoutPriorityIgnorePriority, "audio/shoutpriorityignorepriority");
+	SAVELOAD(fShoutPriorityVolumeReduction, "audio/shoutpriorityvolumereduction");
 	LOADENUM(vsVAD, "audio/vadsource");
 	SAVELOAD(fVADmin, "audio/vadmin");
 	SAVELOAD(fVADmax, "audio/vadmax");
@@ -879,6 +885,9 @@ void Settings::save() {
 	SAVELOAD(bAttenuateUsersOnPrioritySpeak, "audio/attenuateusersonpriorityspeak");
 	SAVELOAD(bOnlyAttenuateSameOutput, "audio/onlyattenuatesameoutput");
 	SAVELOAD(bAttenuateLoopbacks, "audio/attenuateloopbacks");
+	SAVELOAD(bShoutPriority, "audio/shoutpriority");
+    SAVELOAD(bShoutPriorityIgnorePriority, "audio/shoutpriorityignorepriority");
+    SAVELOAD(fShoutPriorityVolumeReduction, "audio/shoutpriorityvolumereduction");
 	SAVELOAD(vsVAD, "audio/vadsource");
 	SAVELOAD(fVADmin, "audio/vadmin");
 	SAVELOAD(fVADmax, "audio/vadmax");

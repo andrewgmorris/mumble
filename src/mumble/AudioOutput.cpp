@@ -353,7 +353,6 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 		return false;
 	}
 
-	const float adjustFactor = std::pow(10.f , -18.f / 20);
 	const float mul = g.s.fVolume;
 	const unsigned int nchan = iChannels;
 	ServerHandlerPtr sh = g.sh;
@@ -364,10 +363,11 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 
 	qrwlOutputs.lockForRead();
 	
-	bool priorityAdjustment = false;
+	bool priorityWhisperingAdjustment = false;
 	bool whisperingAdjustment = false;
-	bool talkingAdjustment = false;
+	bool priorityShoutingAdjustment = false;
 	bool shoutingAdjustment = false;
+	bool priorityTalkingAdjustment = false;
 	
 	QMultiHash<const ClientUser *, AudioOutputUser *>::const_iterator it = qmOutputs.constBegin();
 	while (it != qmOutputs.constEnd()) {
@@ -380,19 +380,26 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 			const ClientUser *user = it.key();
             if (user) {
                 if (user->bPrioritySpeaker) {
-                    priorityAdjustment = true;
-                }
-
-                switch (user->tsState) {
-                    case Settings::Talking:
-                        talkingAdjustment = true;
-                        break;
-                    case Settings::Whispering:
-                        whisperingAdjustment = true;
-                        break;
-                    case Settings::Shouting:
-                        shoutingAdjustment = true;
-                        break;
+                    switch (user->tsState) {
+                        case Settings::Talking:
+                            priorityTalkingAdjustment = true;
+                            break;
+                        case Settings::Whispering:
+                            priorityWhisperingAdjustment = true;
+                            break;
+                        case Settings::Shouting:
+                            priorityShoutingAdjustment = true;
+                            break;
+                    }
+                } else {
+                    switch (user->tsState) {
+                        case Settings::Whispering:
+                            whisperingAdjustment = true;
+                            break;
+                        case Settings::Shouting:
+                            shoutingAdjustment = true;
+                            break;
+                    }
                 }
             }
 		}
@@ -400,7 +407,7 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 	}
 
 	if (g.prioritySpeakerActiveOverride) {
-		priorityAdjustment = true;
+		priorityTalkingAdjustment = true;
 	}
 
 	if (! qlMix.isEmpty()) {
@@ -488,6 +495,54 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 			validListener = true;
 		}
 
+        float whisperAdjust = 1;
+        float priorityShoutAdjust = 1;
+        float shoutAdjust = 1;
+        float priorityTalkAdjust = 1;
+        float talkAdjust = 1;
+        float shoutAdjustFactor = g.s.fShoutPriorityVolumeReduction;
+        
+        if (g.s.bShoutPriorityIgnorePriority) {
+            if (priorityWhisperingAdjustment) {
+                whisperAdjust = shoutAdjustFactor;
+            }
+            priorityShoutAdjust = whisperAdjust;
+            if (whisperingAdjustment) {
+                priorityShoutAdjust = shoutAdjustFactor;
+            }
+            shoutAdjust = priorityShoutAdjust;
+            if (priorityShoutingAdjustment) {
+                shoutAdjust *= shoutAdjustFactor;
+            }
+            priorityTalkAdjust = shoutAdjust;
+            if (shoutingAdjustment) {
+                priorityTalkAdjust *= shoutAdjustFactor;
+            }
+            talkAdjust = priorityTalkAdjust;
+            if (priorityTalkingAdjustment) {
+                talkAdjust *= shoutAdjustFactor;
+            }
+        } else {
+            if (priorityWhisperingAdjustment) {
+                priorityShoutAdjust = shoutAdjustFactor;
+            }
+            priorityTalkAdjust = priorityShoutAdjust;
+            if (priorityShoutingAdjustment) {
+                priorityTalkAdjust = shoutAdjustFactor;
+            }
+            whisperAdjust = priorityTalkAdjust;
+            if (priorityTalkingAdjustment) {
+                whisperAdjust *= shoutAdjustFactor;
+            }
+            shoutAdjust = whisperAdjust;
+            if (whisperingAdjustment) {
+                shoutAdjust *= shoutAdjustFactor;
+            }
+            talkAdjust = shoutAdjust;
+            if (shoutingAdjustment) {
+                talkAdjust *= shoutAdjustFactor;
+            }
+        }
 		foreach(AudioOutputUser *aop, qlMix) {
 			const float * RESTRICT pfBuffer = aop->pfBuffer;
 			float volumeAdjustment = 1;
@@ -496,29 +551,27 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 			if (speech) {
 				const ClientUser *user = speech->p;
 				volumeAdjustment *= user->fLocalVolume;
-                if (user && !user->bPrioritySpeaker) {
-                    const Settings::TalkState state = user->tsState;
-                    if (priorityAdjustment)
-                    {
-                        if (state == Settings::Talking || state == Settings::Shouting  || state == Settings::Whispering) {
-                            // Adjust all non-priority speakers
-                            volumeAdjustment *= adjustFactor;
+                if (user) {
+                    if (user->bPrioritySpeaker) {
+                        switch (user->tsState) {
+                            case Settings::Shouting:
+                                volumeAdjustment *= priorityShoutAdjust;
+                                break;
+                            case Settings::Talking:
+                                volumeAdjustment *= priorityTalkAdjust;
+                                break;
                         }
-                    } 
-
-                    if (whisperingAdjustment)
-                    {
-                        if (state == Settings::Talking || state == Settings::Shouting) {
-                            // Adjust all non-whispering, non priority speakers
-                            volumeAdjustment *= adjustFactor;
-                        }
-                    }
-
-                    if (shoutingAdjustment)
-                    {
-                        if (state == Settings::Talking) {
-                            // Adjust all non whispering, non priority and non shouting speakers
-                            volumeAdjustment *= adjustFactor;
+                    } else {
+                        switch (user->tsState) {
+                            case Settings::Whispering:
+                                volumeAdjustment *= whisperAdjust;
+                                break;
+                            case Settings::Shouting:
+                                volumeAdjustment *= shoutAdjust;
+                                break;
+                            case Settings::Talking:
+                                volumeAdjustment *= talkAdjust;
+                                break;
                         }
                     }
                 }

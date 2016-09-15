@@ -10,7 +10,7 @@
 #define MUMTEXT(X) MUMXTEXT(X)
 
 #ifndef MUMBLE_VERSION
-#define MUMBLE_RELEASE "1.3.0.1 EVE Edition"
+#define MUMBLE_RELEASE "1.3.0.1 Sphere Edition"
 #else
 #define MUMBLE_RELEASE MUMTEXT(MUMBLE_VERSION)
 #endif

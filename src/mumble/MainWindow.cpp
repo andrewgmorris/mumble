@@ -269,7 +269,7 @@ void MainWindow::setupGui()  {
 
 	qaAudioMute->setChecked(g.s.bMute);
 	qaAudioDeaf->setChecked(g.s.bDeaf);
-    qaShoutPriority->setChecked(!g.s.bShoutPriority);
+    qaShoutPriority->setChecked(g.s.bShoutPriority);
 #ifdef USE_NO_TTS
 	qaAudioTTS->setChecked(false);
 	qaAudioTTS->setDisabled(true);

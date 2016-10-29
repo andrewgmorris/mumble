@@ -7,7 +7,7 @@
     <Package Id="*" InstallerVersion="300" Compressed="yes" Languages="0,1028,1029,1030,1031,1033,1034,1035,1036,1040,1041,1043,1044,1045,1046,1049,1053,1055,2052" />
 
     <Property Id='NSISINSTALL'>
-      <RegistrySearch Id='NSISSearch' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Mumble' Type='directory' Name='InstallLocation' />
+      <RegistrySearch Id='NSISSearch' Win64='no' Root='HKLM' Key='SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\MumbleSphereEdition' Type='directory' Name='InstallLocation' />
     </Property> 
 
     <CustomAction Id="SetNSISPath" Property="NSISPath" Value="[NSISINSTALL]Uninstall.exe" />
@@ -34,7 +34,7 @@
 
     <MajorUpgrade AllowDowngrades='no' AllowSameVersionUpgrades='yes' MigrateFeatures='yes' Schedule='afterInstallValidate' DowngradeErrorMessage='A later version of [ProductName] is already installed.' />
 
-    <Media Id="1" Cabinet="$(var.ProductName).cab" EmbedCab="yes" CompressionLevel="high" />
+    <Media Id="1" Cabinet="MumbleSphereEdition.cab" EmbedCab="yes" CompressionLevel="high" />
 
     <UIRef Id="MumbleUI_FeatureTree" />
     <UIRef Id="WixUI_ErrorProgressText" />
@@ -52,7 +52,7 @@
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="$(var.ArchSpecificProgramFilesFolderId)">
-        <Directory Id="INSTALLDIR" Name="$(var.ProductName)">
+        <Directory Id="INSTALLDIR" Name="Mumble Sphere Edition">
         </Directory>
       </Directory>
 
@@ -70,11 +70,10 @@
     </Directory>
 
     <Icon Id="mumble.ico" SourceFile="$(var.SourceDir)\icons\mumble.ico"/>
-    <Icon Id="murmur.ico" SourceFile="$(var.SourceDir)\icons\murmur.ico"/>
 
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationProgramsFolderRemovalComponent" Guid="$(var.ApplicationProgramsFolderRemovalComponentGuid)">
-        <RegistryValue Key="Software\Mumble\Uninstall" Root="HKCU" Value="1" Type="integer" KeyPath="yes" />
+        <RegistryValue Key="Software\MumbleSphereEdition\Uninstall" Root="HKCU" Value="1" Type="integer" KeyPath="yes" />
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
       </Component>
 
@@ -142,25 +141,6 @@
       <Feature Id="MumbleDesktopShortcutFeature" Title="!(loc.MUMBLE_SEC_DesktopShortcut)" Description="!(loc.DESC_DesktopShortcut)" InstallDefault="followParent" AllowAdvertise="no">
         <ComponentRef Id="MumbleDesktopShortcutComponent" />
       </Feature>
-    </Feature>
-
-    <Feature Id="Murmur" Title="!(loc.MUMBLE_SEC_MURMUR)" Description="!(loc.DESC_SectionMurmur)" Level="1000" ConfigurableDirectory="INSTALLDIR" Display="expand">
-      <ComponentRef Id="murmur.exe" />
-      <ComponentRef Id="murmur.ini" />
-      <ComponentRef Id="Murmur.ice" />
-
-      <?ifdef VersionSubDir ?>
-        <?ifdef RedistDirVC12 ?>
-          <ComponentRef Id="Murmur_msvcp120.dll" />
-          <ComponentRef Id="Murmur_msvcr120.dll" />
-        <?endif ?>
-        <ComponentRef Id="Murmur_dbghelp.dll" />
-      <?endif ?>
-
-      <Feature Id="MurmurDesktopShortcutFeature" Title="!(loc.MUMBLE_SEC_DesktopShortcut)" Description="!(loc.DESC_DesktopShortcut)"  InstallDefault="followParent" AllowAdvertise="no">
-        <ComponentRef Id="MurmurDesktopShortcutComponent" />
-      </Feature>
-      
     </Feature>
 
     <Feature Id="Libraries" Title="Required Libraries" Display="hidden" AllowAdvertise="no" Absent="disallow" Level="1">

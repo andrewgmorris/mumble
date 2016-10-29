@@ -502,45 +502,47 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
         float talkAdjust = 1;
         float shoutAdjustFactor = g.s.fShoutPriorityVolumeReduction;
         
-        if (g.s.bShoutPriorityIgnorePriority) {
-            if (priorityWhisperingAdjustment) {
-                whisperAdjust = shoutAdjustFactor;
-            }
-            priorityShoutAdjust = whisperAdjust;
-            if (whisperingAdjustment) {
-                priorityShoutAdjust = shoutAdjustFactor;
-            }
-            shoutAdjust = priorityShoutAdjust;
-            if (priorityShoutingAdjustment) {
-                shoutAdjust *= shoutAdjustFactor;
-            }
-            priorityTalkAdjust = shoutAdjust;
-            if (shoutingAdjustment) {
-                priorityTalkAdjust *= shoutAdjustFactor;
-            }
-            talkAdjust = priorityTalkAdjust;
-            if (priorityTalkingAdjustment) {
-                talkAdjust *= shoutAdjustFactor;
-            }
-        } else {
-            if (priorityWhisperingAdjustment) {
-                priorityShoutAdjust = shoutAdjustFactor;
-            }
-            priorityTalkAdjust = priorityShoutAdjust;
-            if (priorityShoutingAdjustment) {
-                priorityTalkAdjust = shoutAdjustFactor;
-            }
-            whisperAdjust = priorityTalkAdjust;
-            if (priorityTalkingAdjustment) {
-                whisperAdjust *= shoutAdjustFactor;
-            }
-            shoutAdjust = whisperAdjust;
-            if (whisperingAdjustment) {
-                shoutAdjust *= shoutAdjustFactor;
-            }
-            talkAdjust = shoutAdjust;
-            if (shoutingAdjustment) {
-                talkAdjust *= shoutAdjustFactor;
+        if (g.s.bShoutPriority) {
+            if (g.s.bShoutPriorityIgnorePriority) {
+                if (priorityWhisperingAdjustment) {
+                    whisperAdjust = shoutAdjustFactor;
+                }
+                priorityShoutAdjust = whisperAdjust;
+                if (whisperingAdjustment) {
+                    priorityShoutAdjust = shoutAdjustFactor;
+                }
+                shoutAdjust = priorityShoutAdjust;
+                if (priorityShoutingAdjustment) {
+                    shoutAdjust *= shoutAdjustFactor;
+                }
+                priorityTalkAdjust = shoutAdjust;
+                if (shoutingAdjustment) {
+                    priorityTalkAdjust *= shoutAdjustFactor;
+                }
+                talkAdjust = priorityTalkAdjust;
+                if (priorityTalkingAdjustment) {
+                    talkAdjust *= shoutAdjustFactor;
+                }
+            } else {
+                if (priorityWhisperingAdjustment) {
+                    priorityShoutAdjust = shoutAdjustFactor;
+                }
+                priorityTalkAdjust = priorityShoutAdjust;
+                if (priorityShoutingAdjustment) {
+                    priorityTalkAdjust = shoutAdjustFactor;
+                }
+                whisperAdjust = priorityTalkAdjust;
+                if (priorityTalkingAdjustment) {
+                    whisperAdjust *= shoutAdjustFactor;
+                }
+                shoutAdjust = whisperAdjust;
+                if (whisperingAdjustment) {
+                    shoutAdjust *= shoutAdjustFactor;
+                }
+                talkAdjust = shoutAdjust;
+                if (shoutingAdjustment) {
+                    talkAdjust *= shoutAdjustFactor;
+                }
             }
         }
 		foreach(AudioOutputUser *aop, qlMix) {
@@ -552,26 +554,32 @@ bool AudioOutput::mix(void *outbuff, unsigned int nsamp) {
 				const ClientUser *user = speech->p;
 				volumeAdjustment *= user->fLocalVolume;
                 if (user) {
-                    if (user->bPrioritySpeaker) {
-                        switch (user->tsState) {
-                            case Settings::Shouting:
-                                volumeAdjustment *= priorityShoutAdjust;
-                                break;
-                            case Settings::Talking:
-                                volumeAdjustment *= priorityTalkAdjust;
-                                break;
+                    if (!g.s.bShoutPriority) {
+                        if ((priorityTalkingAdjustment || priorityShoutingAdjustment || priorityTalkingAdjustment) && !user->bPrioritySpeaker) {
+                            volumeAdjustment *= 0.125f;
                         }
                     } else {
-                        switch (user->tsState) {
-                            case Settings::Whispering:
-                                volumeAdjustment *= whisperAdjust;
-                                break;
-                            case Settings::Shouting:
-                                volumeAdjustment *= shoutAdjust;
-                                break;
-                            case Settings::Talking:
-                                volumeAdjustment *= talkAdjust;
-                                break;
+                        if (user->bPrioritySpeaker) {
+                            switch (user->tsState) {
+                                case Settings::Shouting:
+                                    volumeAdjustment *= priorityShoutAdjust;
+                                    break;
+                                case Settings::Talking:
+                                    volumeAdjustment *= priorityTalkAdjust;
+                                    break;
+                            }
+                        } else {
+                            switch (user->tsState) {
+                                case Settings::Whispering:
+                                    volumeAdjustment *= whisperAdjust;
+                                    break;
+                                case Settings::Shouting:
+                                    volumeAdjustment *= shoutAdjust;
+                                    break;
+                                case Settings::Talking:
+                                    volumeAdjustment *= talkAdjust;
+                                    break;
+                            }
                         }
                     }
                 }

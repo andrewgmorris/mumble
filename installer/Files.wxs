@@ -76,7 +76,7 @@
       <?endif ?>
 
       <Component Id="dbghelp.dll">
-        <File Source="$(var.DebugToolsDir)\dbghelp.dll" KeyPath="yes" />
+        <File Source="$(var.SourceDir)\3rdparty\dbghelp.dll" KeyPath="yes" />
       </Component>
 
     <?ifdef VersionSubDir ?>
@@ -92,7 +92,7 @@
       <Component Id="MumbleDesktopShortcutComponent" Guid="$(var.MumbleDesktopShortcutGuid)" KeyPath="yes">
         <Shortcut Id="MumbleDesktopShortcut"
                   Directory="DesktopFolder"
-                  Name="Mumble"
+                  Name="Mumble Sphere Edition"
                   WorkingDirectory="INSTALLDIR"
                   Target="[INSTALLDIR]mumble.exe">
           <ShortcutProperty Key="System.AppUserModel.ID" Value="net.sourceforge.mumble.Mumble" />
@@ -101,7 +101,7 @@
       
       <Component Id="mumble.exe" Guid="$(var.MumbleExeGuid)">
         <File Id="mumble.exe" Source="$(var.SourceDir)\release\mumble.exe" KeyPath="yes">
-          <Shortcut Id="MumbleShortcut" Directory="ApplicationProgramsFolder" Name="Mumble" WorkingDirectory="INSTALLDIR">
+          <Shortcut Id="MumbleShortcut" Directory="ApplicationProgramsFolder" Name="Mumble Sphere Edition" WorkingDirectory="INSTALLDIR">
             <ShortcutProperty Key="System.AppUserModel.ID" Value="net.sourceforge.mumble.Mumble" />
           </Shortcut>
         </File>
@@ -111,42 +111,6 @@
         <RegistryValue Root="HKCR" Key="mumble\DefaultIcon" Value="[#mumble.exe]" Type="string" />
         <RegistryValue Root="HKCR" Key="mumble\shell\open\command" Value="[#mumble.exe] &quot;%1&quot;" Type="string" />
       </Component>
-
-      <Component Id="MurmurDesktopShortcutComponent" Guid="$(var.MurmurDesktopShortcutGuid)" KeyPath="yes">
-        <Shortcut Id="MurmurDesktopShortcut"
-                  Directory="DesktopFolder"
-                  Name="Murmur"
-                  WorkingDirectory="INSTALLDIR"
-                  Target="[INSTALLDIR]murmur.exe"
-                  Icon="murmur.ico"
-                  IconIndex="0" />
-      </Component>
-        
-      <Component Id="murmur.exe">
-        <File Id="murmur.exe" Source="$(var.SourceDir)\release\murmur.exe" KeyPath="yes">
-          <Shortcut Id="MurmurShortcut" Directory="ApplicationProgramsFolder" Name="Murmur" WorkingDirectory="INSTALLDIR" Icon="murmur.ico" IconIndex="0" />
-        </File>
-      </Component>
-      <Component Id="murmur.ini" NeverOverwrite="yes">
-        <File Source="$(var.SourceDir)\scripts\murmur.ini.win32" Name="murmur.ini" KeyPath="yes" />
-      </Component>
-      <Component Id="Murmur.ice">
-        <File Source="$(var.SourceDir)\src\murmur\Murmur.ice" KeyPath="yes" />
-      </Component>
-
-      <?ifdef VersionSubDir ?>
-        <?ifdef RedistDirVC12 ?>
-        <Component Id="Murmur_msvcp120.dll">
-          <File Id="Murmur_msvcp120.dll" Source="$(var.RedistDirVC12)\msvcp120.dll" KeyPath="yes" />
-        </Component>
-        <Component Id="Murmur_msvcr120.dll">
-          <File Id="Murmur_msvcr120.dll" Source="$(var.RedistDirVC12)\msvcr120.dll" KeyPath="yes" />
-        </Component>
-        <?endif ?>
-        <Component Id="Murmur_dbghelp.dll">
-          <File Id="Murmur_dbghelp.dll" Source="$(var.DebugToolsDir)\dbghelp.dll" KeyPath="yes" />
-        </Component>
-      <?endif ?>
 
       <Component Id="licence.txt" Guid="$(var.LicenseTextGuid)">
         <File Source="$(var.SourceDir)\installer\gpl.txt" Name="licence.txt" KeyPath="yes" />

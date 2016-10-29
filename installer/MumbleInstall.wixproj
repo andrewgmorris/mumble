@@ -6,7 +6,7 @@
     <ProductVersion>3.5</ProductVersion>
     <ProjectGuid>{84afea8b-15e5-4cc7-b77d-27dd17030944}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Mumble</OutputName>
+    <OutputName>Mumble_Sphere_Edition_1.3.0.1</OutputName>
     <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
